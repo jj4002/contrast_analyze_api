@@ -1,8 +1,8 @@
 from services.document.file_handler import validate_file, save_upload
 from services.document.parser import parse_docx, parse_pdf, parse_document
 from services.document.chunker import chunk_by_clause
-from services.vectorstore.embeddings import get_embeddings
-from services.vectorstore.chroma_client import get_contract_collection, get_legal_collection
+from services.vectorstore.embeddings import embed_texts, get_embedding_dim
+from services.vectorstore.faiss_store import get_contract_collection, get_legal_collection
 from services.vectorstore.retriever import retrieve_contract, retrieve_legal
 from services.knowledge_base.loader import load_legal_documents
 from services.agents.clause_parser import parse_contract

@@ -1,18 +1,33 @@
+import json
+import re
 from typing import List
-from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.prompts import PromptTemplate
 from models import RiskItem
 from prompts import RISK_FLAG_PROMPT
-from services.agents._llm import get_llm
+from config import logger
+from services.agents._llm import chat_completion, DEFAULT_PROVIDER
 from services.vectorstore.retriever import retrieve_legal
 
 
-def flag_risks(contract_text: str, contract_id: str) -> List[RiskItem]:
+def _parse_json_array(raw: str):
+    text = raw.strip()
+    fenced = re.search(r"```(?:json)?\s*(.*?)```", text, re.DOTALL)
+    if fenced:
+        text = fenced.group(1).strip()
+    return json.loads(text)
+
+
+def flag_risks(contract_text: str, contract_id: str, provider: str = DEFAULT_PROVIDER) -> List[RiskItem]:
     legal_docs = retrieve_legal("vi phạm hợp đồng rủi ro pháp lý", k=3)
     legal_context = "\n\n".join([d.page_content for d in legal_docs]) if legal_docs else "Không có dữ liệu pháp luật liên quan."
-    chain = (PromptTemplate(template=RISK_FLAG_PROMPT, input_variables=["contract_text", "legal_context"])
-             | get_llm() | JsonOutputParser())
-    result = chain.invoke({"contract_text": contract_text[:10000], "legal_context": legal_context})
+    prompt = RISK_FLAG_PROMPT.format(contract_text=contract_text[:10000], legal_context=legal_context)
+    raw = chat_completion(prompt, provider=provider)
+
+    try:
+        result = _parse_json_array(raw)
+    except (json.JSONDecodeError, TypeError) as e:
+        logger.error(f"Failed to parse risk flagger output for {contract_id}: {e}")
+        return []
+
     if isinstance(result, list):
         return [RiskItem(
             clause_ref=item.get("clause_ref", ""),

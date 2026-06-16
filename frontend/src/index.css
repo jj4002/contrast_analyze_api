@@ -1,0 +1,42 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: "Inter", sans-serif;
+  background-color: #f7f9fb;
+}
+
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.glow-cloud {
+  filter: drop-shadow(0 0 15px rgba(59, 96, 144, 0.4));
+}
+
+.upload-zone:hover {
+  border-color: #3b6090;
+  background-color: rgba(242, 244, 246, 0.8);
+}
+
+.risk-card-shadow {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+}
+.risk-card-shadow:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+@keyframes progress-sweep {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(300%);
+  }
+}
+.animate-progress-sweep {
+  animation: progress-sweep 1.4s ease-in-out infinite;
+}

@@ -11,7 +11,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-RUN mkdir -p data/uploads data/laws data/chroma_db
+RUN mkdir -p data/uploads data/vector_store
 
 EXPOSE 8000
 

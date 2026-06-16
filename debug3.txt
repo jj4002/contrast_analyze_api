@@ -1,2 +1,0 @@
-p0: matched=True val='| 7.000.000 đồng/tháng'
-p1: matched=True val='| 7.000.000 đồng/tháng'

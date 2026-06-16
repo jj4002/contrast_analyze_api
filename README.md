@@ -7,10 +7,9 @@
 ## Cài đặt & Chạy
 
 ```bash
-cd backend
 pip install -r requirements.txt
-cp .env.example .env  # Thêm GROQ_API_KEY của bạn
-uvicorn app.main:app --reload --port 8000
+cp .env.example .env  # Thêm GROQ_API_KEY, DATABASE_URL, SUPABASE_URL, SUPABASE_SECRET_KEY của bạn
+uvicorn main:app --reload --port 8000
 ```
 
 Mở trình duyệt tại `http://localhost:8000`
@@ -24,5 +23,6 @@ Mở trình duyệt tại `http://localhost:8000`
 ## Công nghệ
 - **FastAPI** - Backend framework
 - **Groq Llama 3.1 8B** - AI phân tích hợp đồng
-- **ChromaDB + Vietnamese-SBERT** - RAG và tìm kiếm ngữ nghĩa
-- **SQLite** - Lưu trữ dữ liệu
+- **FAISS + Vietnamese-SBERT** - RAG và tìm kiếm ngữ nghĩa
+- **PostgreSQL (Supabase)** - Lưu trữ dữ liệu
+- **Supabase Auth** - Xác thực người dùng

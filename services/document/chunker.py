@@ -1,9 +1,44 @@
 import re
 import unicodedata
 from typing import List
-from langchain_core.documents import Document
-from langchain_text_splitters import RecursiveCharacterTextSplitter
+from services.vectorstore.document import Document
 from config import MAX_CHUNK_SIZE, CHUNK_OVERLAP
+
+_SEPARATORS = ["\n\n", "\n", ".", " ", ""]
+
+
+def _split_text(text: str, chunk_size: int, chunk_overlap: int, separators: List[str] = None) -> List[str]:
+    """Recursively split text on the first separator that fits, applying overlap between chunks."""
+    if len(text) <= chunk_size:
+        return [text] if text else []
+
+    separators = _SEPARATORS if separators is None else separators
+    sep = separators[0]
+    rest = separators[1:]
+    parts = text.split(sep) if sep else list(text)
+
+    chunks, current = [], ""
+    for part in parts:
+        candidate = current + sep + part if current else part
+        if len(candidate) <= chunk_size:
+            current = candidate
+        else:
+            if current:
+                chunks.append(current)
+            if len(part) > chunk_size and rest:
+                chunks.extend(_split_text(part, chunk_size, chunk_overlap, rest))
+                current = ""
+            else:
+                current = part
+    if current:
+        chunks.append(current)
+
+    if chunk_overlap > 0 and len(chunks) > 1:
+        overlapped = [chunks[0]]
+        for i in range(1, len(chunks)):
+            overlapped.append(chunks[i - 1][-chunk_overlap:] + chunks[i])
+        return overlapped
+    return chunks
 
 
 def chunk_by_clause(text: str, contract_id: str) -> List[Document]:
@@ -14,16 +49,10 @@ def chunk_by_clause(text: str, contract_id: str) -> List[Document]:
     documents = []
     chunk_index = 0
 
-    splitter = RecursiveCharacterTextSplitter(
-        chunk_size=MAX_CHUNK_SIZE,
-        chunk_overlap=CHUNK_OVERLAP,
-        separators=["\n\n", "\n", ".", " ", ""],
-    )
-
     if splits and splits[0].strip():
         preamble = splits[0].strip()
         if len(preamble) > MAX_CHUNK_SIZE:
-            for chunk in splitter.split_text(preamble):
+            for chunk in _split_text(preamble, MAX_CHUNK_SIZE, CHUNK_OVERLAP):
                 chunk_index += 1
                 documents.append(Document(
                     page_content=chunk,
@@ -47,7 +76,7 @@ def chunk_by_clause(text: str, contract_id: str) -> List[Document]:
         clause_number = num.group(1) if num else str(chunk_index)
 
         if len(chunk_text) > MAX_CHUNK_SIZE:
-            for chunk in splitter.split_text(chunk_text):
+            for chunk in _split_text(chunk_text, MAX_CHUNK_SIZE, CHUNK_OVERLAP):
                 chunk_index += 1
                 documents.append(Document(
                     page_content=chunk,
@@ -66,7 +95,7 @@ def chunk_by_clause(text: str, contract_id: str) -> List[Document]:
 
     if not documents or has_only_preamble:
         documents = []
-        for idx, chunk in enumerate(splitter.split_text(text)):
+        for idx, chunk in enumerate(_split_text(text, MAX_CHUNK_SIZE, CHUNK_OVERLAP)):
             if chunk.strip():
                 documents.append(Document(
                     page_content=chunk.strip(),
