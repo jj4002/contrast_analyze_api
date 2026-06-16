@@ -1,0 +1,6 @@
+19: ['Điều 2: Lương, phụ cấp, các khoản bổ sung khác']
+20: ['- Hình thức trả lương: Tiền mặt hoặc chuyển khoản. Được trả lương vào ngày 10 của tháng.']
+21: ['- Chế độ nâng bậc, nâng lương: Theo quy định công ty và theo kết quả làm việc.']
+28: ['BHTN 1%) mức lương căn bản của Điều 2; tỉ lệ đóng của các năm tiếp theo sẽ được điều chỉnh theo đúng quy định pháp luật,']
+33: ['- Trừ trường hợp có phản hồi bằng văn bản của người lao động, các Quyết định/Thông báo lương, thưởng của Công ty được xe']
+61: ['Lương căn bản: | 7.000.000 đồng/tháng | Phụ cấp: | 300.000đồng/tháng']

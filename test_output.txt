@@ -1,0 +1,4 @@
+  File "<string>", line 1
+    import sys; sys.path.insert(0,'.'); from services.document.parser import parse_document; from services.document.chunker import chunk_by_clause; t=parse_document('../Mau-hop-dong-lao-dong.docx','.docx'); docs=chunk_by_clause(t,'test'); [print(f'{d.metadata[\
+                                                                                                                                                                                                                                                      ^
+SyntaxError: unterminated string literal (detected at line 1)
