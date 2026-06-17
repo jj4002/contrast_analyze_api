@@ -5,21 +5,38 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
+# ── LLM Config ──
 GROQ_API_KEY = os.getenv("GROQ_API_KEY", "")
 GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.1-8b-instant")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY", "")
 GEMINI_MODEL = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+
+# ── Embedding ──
 EMBEDDING_MODEL = os.getenv("EMBEDDING_MODEL", "dangvantuan/vietnamese-embedding")
 EMBEDDING_DEVICE = os.getenv("EMBEDDING_DEVICE", "auto")
+EMBED_MAX_CHARS = int(os.getenv("EMBED_MAX_CHARS", "1000"))
+
+# ── Database ──
 DATABASE_URL = os.getenv("DATABASE_URL", "")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_SECRET_KEY = os.getenv("SUPABASE_SECRET_KEY", "")
+
+# ── Paths ──
 VECTOR_STORE_DIR = os.getenv("VECTOR_STORE_DIR", "data/vector_store")
 UPLOAD_DIR = os.getenv("UPLOAD_DIR", "data/uploads")
-MAX_CHUNK_SIZE = int(os.getenv("MAX_CHUNK_SIZE", "500"))
+
+# ── Chunking ── (256-token limit của dangvantuan/vietnamese-embedding)
+# Vietnamese: ~4 chars/token → max ~1000 chars/chunk
+MAX_CHUNK_SIZE = int(os.getenv("MAX_CHUNK_SIZE", "1000"))
+MIN_CHUNK_CHARS = int(os.getenv("MIN_CHUNK_CHARS", "100"))
+TARGET_CHUNK_CHARS = int(os.getenv("TARGET_CHUNK_CHARS", "500"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "50"))
+
+# ── Retrieval ──
 TOP_K_RETRIEVAL = int(os.getenv("TOP_K_RETRIEVAL", "5"))
 SIMILARITY_THRESHOLD = float(os.getenv("SIMILARITY_THRESHOLD", "0.6"))
+
+# ── Legal KB ──
 LEGAL_KB_BATCH_SIZE = int(os.getenv("LEGAL_KB_BATCH_SIZE", "256"))
 LEGAL_KB_ACTIVE_ONLY = os.getenv("LEGAL_KB_ACTIVE_ONLY", "true").lower() == "true"
 

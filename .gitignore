@@ -1,10 +1,43 @@
+# ── Environment ──
 .env
-venv
+.env.local
+.env.production
 
+# ── Python ──
+venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
 
-data/
+# ── IDE / Editor ──
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
 
+# ── Data ──
+data/vector_store/*
+data/uploads/*
+!data/vector_store/.gitkeep
+!data/uploads/.gitkeep
+
+# ── Logs ──
+logs/
 *.log
 debug*.txt
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── Docker ──
+.docker
+
+# ── Misc ──
+*.bak
+*.tmp
